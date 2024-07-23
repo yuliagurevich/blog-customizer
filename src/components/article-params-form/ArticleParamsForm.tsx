@@ -36,7 +36,7 @@ type ArticleParamsFormProps = {
 export const ArticleParamsForm = (props: ArticleParamsFormProps) => {
 	const { articleParams, handleApplyParams } = props;
 
-	const [isOpen, setIsOpen] = useState<boolean>(false);
+	const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 	const [selectedParams, setSelectedParams] =
 		useState<ArticleStateType>(articleParams);
 
@@ -44,18 +44,18 @@ export const ArticleParamsForm = (props: ArticleParamsFormProps) => {
 	const arrowButtonRef = useRef<HTMLDivElement | null>(null);
 
 	useOutsideClickClose({
-		isOpen,
+		isOpen: isMenuOpen,
 		refs: [paramsFormRef, arrowButtonRef],
-		onClose: setIsOpen,
+		onClose: setIsMenuOpen,
 	});
 
 	useEscPressClose({
-		isOpen,
-		onClose: setIsOpen,
+		isOpen: isMenuOpen,
+		onClose: setIsMenuOpen,
 	});
 
 	function toggleIsOpen() {
-		setIsOpen((previousState) => !previousState);
+		setIsMenuOpen((previousState) => !previousState);
 	}
 
 	function handleOptionChange(
@@ -71,7 +71,7 @@ export const ArticleParamsForm = (props: ArticleParamsFormProps) => {
 	function handleResetClick() {
 		setSelectedParams(defaultArticleState);
 		handleApplyParams(defaultArticleState);
-		setIsOpen(false);
+		setIsMenuOpen(false);
 	}
 
 	return (
@@ -79,17 +79,19 @@ export const ArticleParamsForm = (props: ArticleParamsFormProps) => {
 			<ArrowButton
 				ref={arrowButtonRef}
 				handleClick={toggleIsOpen}
-				isOpen={isOpen}
+				isOpen={isMenuOpen}
 			/>
 			<aside
-				className={clsx(styles.container, { [styles.container_open]: isOpen })}
+				className={clsx(styles.container, {
+					[styles.container_open]: isMenuOpen,
+				})}
 				ref={paramsFormRef}>
 				<form
 					className={styles.form}
 					onSubmit={(event) => {
 						event?.preventDefault();
 						handleApplyParams(selectedParams);
-						setIsOpen(false);
+						setIsMenuOpen(false);
 					}}>
 					{/* Text: Заголовок формы параметров */}
 					<Text as={'h2'} uppercase={true} weight={800} size={31}>
